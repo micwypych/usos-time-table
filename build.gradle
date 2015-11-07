@@ -1,0 +1,38 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'jetty'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'ch.qos.logback:logback-classic:1.1.3'
+    compile 'org.springframework:spring-webmvc:4.1.6.RELEASE'
+    compile 'javax.servlet:jstl:1.2'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    testCompile 'junit:junit:4.12'
+}
+
+jettyRun {
+    contextPath = "tt"
+    httpPort = 8082
+}
+
+jettyRunWar {
+    contextPath = "tt"
+    httpPort = 8082
+}
+
+eclipse {
+   
+    wtp {
+        component {
+            contextPath = 'tt'
+        }
+    }
+}
