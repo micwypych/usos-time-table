@@ -19,4 +19,14 @@ public enum Title {
 	public String toString() {
 		return textValue;
 	}
+
+	public static Title fromString(String value) {
+		for( Title title : values() ) {
+			if( title.name().equals(value) )
+				return title;
+			if( title.textValue.equals(value) )
+				return title;
+		}
+		throw new IllegalArgumentException("No enum constanat "+value);
+	}
 }

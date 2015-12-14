@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	- DispatcherServlet application context for PetClinic's web tier.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans.xsd">
+    
+
+    <!--bean id="templateResolver" 
+        class="com.github.micwypych.usos_time_table.util.ServletContextTemplateResolverProxy"-->
+    <bean id="templateResolver" 
+        class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">        
+        <property name="prefix" value="/WEB-INF/views/thymeleaf/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML5" />
+        <property name="cacheable" value="false" />
+    </bean>
+
+    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="contentNegotiationManager" ref="cnManager"/>
+        
+        <property name="viewResolvers">
+        	<list>
+            
+                <!-- Used here for 'xml' and 'atom' views  -->
+                <!--bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+                    <property name="order" value="1"/>
+                </bean-->
+                
+                <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+                <!--bean class="com.github.micwypych.usos_time_table.util.ThymeleafViewResolverProxy"-->
+                    <property name="templateEngine" ref="templateEngine" />
+                    <property name="order" value="1"/>
+                    <!--property name="viewNames" value="/**/*.html,/*.html"/-->                                            
+                    <property name="excludedViewNames" value="*.xml"/>
+                </bean>                
+        	</list>
+        </property>
+    </bean>
+
+
+    <!-- Simple strategy: only path extension is taken into account -->
+    <bean id="cnManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorPathExtension" value="true"/>
+        <property name="ignoreAcceptHeader" value="true"/>
+        <property name="defaultContentType" value="text/html"/>
+        
+        <property name="mediaTypes">
+            <map>
+                <entry key="html" value="text/html" />
+                <entry key="xml" value="application/xml" />
+                <entry key="atom" value="application/atom+xml" />
+            </map>
+        </property>
+    </bean>
+    
+</beans>

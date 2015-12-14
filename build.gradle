@@ -1,7 +1,9 @@
-apply plugin: 'java'
+//apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'jetty'
+
+compileJava.options.encoding = 'UTF-8'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
@@ -10,29 +12,60 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    web
+    database
+    tools
+    date
+    spring
+    hibernate
+    log
+
+    compile.extendsFrom spring, web, date, tools, hibernate
+    runtime.extendsFrom database, log
+}
+
 dependencies {
-    compile 'ch.qos.logback:logback-classic:1.1.3'
-    compile 'org.springframework:spring-webmvc:4.1.6.RELEASE'
-    compile 'javax.servlet:jstl:1.2'
+    log 'ch.qos.logback:logback-classic:1.1.3'
+    spring 'org.springframework:spring-aop:4.2.3.RELEASE'
+    spring 'org.springframework:spring-tx:4.2.3.RELEASE'
+    spring 'org.springframework:spring-webmvc:4.2.3.RELEASE'
+    spring 'org.springframework:spring-oxm:4.2.3.RELEASE'
+    
+    web 'javax.validation:validation-api:1.1.0.Final'
+    web 'javax.servlet:jstl:1.2'
+    web 'javax.servlet:servlet-api:2.5'
+
+    web 'org.thymeleaf:thymeleaf-spring4:2.1.4.RELEASE'
+
+    tools 'org.aspectj:aspectjrt:1.7.2'
+	tools 'org.apache.poi:poi:3.11'
+	tools 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+	tools 'com.google.guava:guava:18.0'
+
     compile 'org.apache.commons:commons-lang3:3.4'
     testCompile 'junit:junit:4.12'
 }
 
 jettyRun {
-    contextPath = "tt"
+    contextPath = "usos-time-table"
     httpPort = 8082
 }
 
 jettyRunWar {
-    contextPath = "tt"
+    contextPath = "usos-time-table"
     httpPort = 8082
 }
 
 eclipse {
+
+    classpath {
+        
+    }
    
     wtp {
         component {
-            contextPath = 'tt'
+            contextPath = 'usos-time-table'
         }
     }
 }
